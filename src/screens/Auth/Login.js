@@ -1,11 +1,51 @@
-import React from "react";
+import React, {useState} from 'react'
 import {  useNavigate,Link } from "react-router-dom";
+import axios from 'axios';
 const Login = () => {
 
     const navigate = useNavigate();
-
+    const[username,setUsername] = useState(null)
+    const [password, setPassword]=useState(null)
+	
     const submit = () => {
-        navigate("/register");
+	   // check if username and password are null return error
+	   if(username === null || password === null){
+		alert('enter username and password')
+		   return
+	   }
+	   try {
+		axios({
+			method: 'post',
+			url: 'https://maneoapuso.herokuapp.com/api/v1/auth/login',
+			data: {
+				email: username,
+				password: password
+			},
+			config: {headers: {'Content-Type': 'multipart/form-data'}}
+		})
+			.then(function (response) {
+			// if (response.data.ShouldResetPassword === true){
+			// 	navigate('/change-password')
+			// }
+			// else{
+				localStorage.setItem('token',response.data.accessToken)
+				localStorage.setItem('userId',response.data._id)
+				localStorage.setItem('email',response.data.email)
+				localStorage.setItem('fullNames',response.data.fullNames)
+				console.table('user information====',response.data)
+				navigate('/home')
+			// }
+			})
+			.catch(function (response) {
+				//handle error
+				alert(response)
+				console.log(response);
+			});
+	}
+	catch (e) {
+		console.log(e);
+	}
+		
         
     }
     return (
@@ -37,7 +77,7 @@ const Login = () => {
 			<span className="text-gray-500 font-normal">OR</span>
 			<span className="h-px w-16 bg-gray-300"></span>
 		</div>
-		<form className="mt-8 space-y-6" action="#" method="POST">
+		<div className="mt-8 space-y-6">
 			<input type="hidden" name="remember" value="true"/>
 			<div className="relative">
 				<div className="absolute right-0 mt-4"><svg xmlns="http://www.w3.org/2000/svg"
@@ -47,13 +87,17 @@ const Login = () => {
 					</svg>
                 </div>
 				<label className="text-sm font-bold text-gray-700 tracking-wide">Email</label>
-				<input className=" w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="mail@gmail.com" />
+				<input 
+				onChange={event => setUsername(event.target.value)}
+				className=" w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="mail@gmail.com" />
             </div>
 			<div className="mt-8 content-center">
 				<label className="text-sm font-bold text-gray-700 tracking-wide">
 					Password
 				</label>
-				<input className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="Enter your password" />
+				<input 
+				onChange={event => setPassword(event.target.value)}
+				className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="Enter your password" />
             </div>
 			<div className="flex items-center justify-between">
 					<div className="flex items-center">
@@ -82,7 +126,9 @@ const Login = () => {
 				<Link to={`/register`}
                 className="text-indigo-500 hover:text-indigo-500no-underline hover:underline cursor-pointer transition ease-in duration-300">Sign up</Link>
 			</p>
-		</form>
+		</div>
+
+		
 	</div>
 
       </div>
