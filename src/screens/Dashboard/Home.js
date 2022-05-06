@@ -34,6 +34,14 @@ const PhysicalAddress = {
     const [CompanyPhysicalAddress, setCompanyPhysicalAddress] = useState(PhysicalAddress);
     const [CompanyPostalAddress, setCompanyPostalAddress] = useState(PostalAddress);
 
+    const name = localStorage.getItem('name');
+    const type = localStorage.getItem('type');
+    const number = localStorage.getItem('number');
+    const email = localStorage.getItem('email');
+    // const address = localStorage.getItem('address');
+    // const city = localStorage.getItem('city');
+    const started = localStorage.getItem('started');
+
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('userId');
    
@@ -202,16 +210,16 @@ const PhysicalAddress = {
 
                                 <div>
                                         <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Company</label>
-                                        <input onChange={event => setCompanyName(event.target.value)} type="text"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="company" required/>
+                                        <input value={name} onChange={event => setCompanyName(event.target.value)} type="text"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="company" required/>
                                     </div>
                                     <div>
                                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
-                                        <input onChange={event => setCompanyEmail(event.target.value)}  type="text"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="company@emal.com" required/>
+                                        <input value={email} onChange={event => setCompanyEmail(event.target.value)}  type="text"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="company@emal.com" required/>
                                     </div>
 
                                     <div>
                                         <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Mobile Number</label>
-                                        <input onChange={event => setCompanyPhone(event.target.value)} type="text"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+26776523489" required/>
+                                        <input  value={number} onChange={event => setCompanyPhone(event.target.value)} type="text"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+26776523489" required/>
                                     </div>
                                     <div>
                                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Landline</label>
@@ -219,7 +227,7 @@ const PhysicalAddress = {
                                     </div>
                                     <div>
                                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">startDate</label>
-                                        <input  onChange={event => setStartDate(event.target.value)} type="date"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+267342153" required/>
+                                        <input value={started} onChange={event => setStartDate(event.target.value)} type="date"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+267342153" required/>
                                     </div>
 
                                     <div>

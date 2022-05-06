@@ -97,7 +97,7 @@ const Login = () => {
 				</label>
 				<input 
 				onChange={event => setPassword(event.target.value)}
-				className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="Enter your password" />
+				className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="password" placeholder="Enter your password" />
             </div>
 			<div className="flex items-center justify-between">
 					<div className="flex items-center">
