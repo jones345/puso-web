@@ -3,6 +3,7 @@ import Nav from "../Dashboard/Nav"
 import SideBar from "../Dashboard/SideBar"
 import axios from 'axios';
 
+
 export default function Company() {
     const[Services,setServices] = useState([]);
     const [users, setUsers] = useState([]);
@@ -21,7 +22,7 @@ export default function Company() {
 
 
     const getServices = () => {
-		axios.get(`https://maneoapuso.herokuapp.com/api/v1/company/services/all/${localStorage.getItem('companyId')}`,{
+		axios.get(`http://localhost:3010/api/v1/company/services/all/${localStorage.getItem('companyId')}`,{
 			headers: {
 				token: "Bearer " + localStorage.getItem('token'),
 			}
@@ -38,7 +39,7 @@ export default function Company() {
 	}
 
     const getUsers = () => {
-		axios.get(`https://maneoapuso.herokuapp.com/api/v1/company/users/${localStorage.getItem('companyId')}`,{
+		axios.get(`http://localhost:3010/api/v1/company/users/${localStorage.getItem('companyId')}`,{
 			headers: {
 				token: "Bearer " + localStorage.getItem('token'),
 			}

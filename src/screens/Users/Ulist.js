@@ -13,7 +13,7 @@ export default function Ulist() {
 
 
 	const getUsers = () => {
-		axios.get(`https://maneoapuso.herokuapp.com/api/v1/company/users/${localStorage.getItem('companyId')}`,{
+		axios.get(`http://localhost:3010/api/v1/company/users/${localStorage.getItem('companyId')}`,{
 			headers: {
 				token: "Bearer " + localStorage.getItem('token'),
 			}
@@ -49,7 +49,12 @@ export default function Ulist() {
 			<h2 class="text-gray-600 font-semibold">Users</h2>
 			<span class="text-xs">All Company Users</span>
 		</div>
+		{/* add button to create new user  */}
+		{/* <Link to="/addUser" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+				Create User
+			</Link> */}
 		<div class="flex items-center justify-between">
+			
 			<div class="flex bg-gray-50 items-center p-2 rounded-md">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
 					fill="currentColor">
@@ -58,8 +63,9 @@ export default function Ulist() {
 						clip-rule="evenodd" />
 				</svg>
 				<input class="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..."/>
-          </div>
 				
+          </div>
+
 			</div>
 		</div>
 		<div>

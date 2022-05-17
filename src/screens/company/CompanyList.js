@@ -1,31 +1,43 @@
 import React,{useState, useEffect} from 'react'
-import {  Link } from 'react-router-dom'
+import {  useNavigate,Link } from "react-router-dom";
 import axios from 'axios';
 import Nav from "../Dashboard/Nav"
 
-export default function Slist() {
-	const [services,setServices] = useState([]);
+export default function CompanyList() {
+    const [companies, setCompanies] = useState([]);
+    const navigate = useNavigate();
 
-	useEffect(() => {
-		// getServices();
-	}, [])
+    useEffect(() => {
+      getAllCompanies();
+    }, []);
 
-	// const getServices = () => {
-	// 	axios.get(`http://localhost:3010/api/v1/company/services/all/${localStorage.getItem('companyId')}`,{
-	// 		headers: {
-	// 			token: "Bearer " + localStorage.getItem('token'),
-	// 		}
-	// 	})
-	// 		.then(function (response) {
-	// 			console.log(response.data);
-	// 			setServices(response.data);
-	// 		}
-	// 		)
-	// 		.catch(function (error) {
-	// 			console.log(error);
-	// 		}
-	// 		);
-	// }
+    const getAllCompanies = async () => {
+
+        	axios.get(`http://localhost:3010/api/v1/company`,{
+			headers: {
+				token: "Bearer " + localStorage.getItem('token'),
+			}
+		})
+			.then(function (response) {
+				console.log(response.data);
+				setCompanies(response.data);
+			}
+			)
+			.catch(function (error) {
+				console.log(error);
+			}
+			);
+
+    }
+
+    const viewCompany = (companyId) => {
+        // navigate(`/company/${companyId}`);
+        console.log('company id =======',companyId);
+    }
+
+    const updateCompany = (companyId) => {
+        navigate(`/updateCompany/${companyId}`);
+    }
   return (
     <div class="h-screen w-full flex overflow-hidden">
     <Nav/>
@@ -42,8 +54,8 @@ export default function Slist() {
 <div class="bg-white p-8 rounded-md w-full">
 	<div class=" flex items-center justify-between pb-6">
 		<div>
-			<h2 class="text-gray-600 font-semibold">Services</h2>
-			<span class="text-xs">All Company Services</span>
+			<h2 class="text-gray-600 font-semibold">Companies</h2>
+			<span class="text-xs">All companies</span>
 		</div>
 		<div class="flex items-center justify-between">
 			<div class="flex bg-gray-50 items-center p-2 rounded-md">
@@ -55,6 +67,10 @@ export default function Slist() {
 				</svg>
 				<input class="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..."/>
           </div>
+          <div class="lg:ml-40 ml-10 space-x-8">
+					<Link to={''} class="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">New Report</Link>
+					<Link to={'/CompanAdd'} class="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">Create</Link>
+		  </div>
 				
 			</div>
 		</div>
@@ -66,16 +82,16 @@ export default function Slist() {
 							<tr>
 								<th
 									class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									category
+									Name
 								</th>
 								
 								<th
 									class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									name
+									Email
 								</th>
 								<th
 									class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-							    description
+							    Operation Times
 								</th>
 								<th
 									class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -84,32 +100,36 @@ export default function Slist() {
 							</tr>
 						</thead>
 						<tbody>
-						{/* {services.map((service)=>{
-                        return( */}
+						{companies.map((company)=>{
+                        return(
 							<tr>
 								<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<div class="flex items-center">
-										{/* {service.categories} */}
+										{company.Name}
 										</div>
 								</td>
 								
 								<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<p class="text-gray-900 whitespace-no-wrap">
-										{/* {service.name} */}
+										{company.email}
 									</p>
 								</td>
 								<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<p class="text-gray-900 whitespace-no-wrap">
-                                   {/* {service.description} */}
+                                   {company.operationHours}
 									</p>
 								</td>
 								<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <div class="flex items-center">
 										<div class="flex-shrink-0 w-6 h-6">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <a 
+                                            // onClick={() => deleteDoctor(stock._id)}
+                                            onClick={() => viewCompany(company._id)}>
+                                        <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
+                                            </a>
                                         </div>
                                         <div class="flex-shrink-0 w-6 h-6">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -124,8 +144,8 @@ export default function Slist() {
 										</div>
 								</td>
 							</tr>
-								{/* );
-								})} */}
+								 );
+								})} 
 						</tbody>
 					</table>
 					<div

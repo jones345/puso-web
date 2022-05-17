@@ -1,10 +1,11 @@
 import React, { useState,useEffect } from "react";
 import axios from 'axios';
 import {
-    Link
+    Link,useNavigate
   } from "react-router-dom";
 export default function Nav() {
 
+    const navigate = useNavigate();
     const[Company,setCompany] = useState('');
     const fullnames = localStorage.getItem('fullNames');
     const userId = localStorage.getItem('userId');
@@ -19,7 +20,7 @@ export default function Nav() {
 
 
    const getCompanyByUserId = () => {
-        axios.get(`https://maneoapuso.herokuapp.com/api/v1/company/find/${userId}`,{
+        axios.get(`http://localhost:3010/api/v1/company/find/${userId}`,{
             headers: {
                 token: "Bearer " + token,
             }
@@ -27,14 +28,6 @@ export default function Nav() {
             .then(function (response) {
                 console.log(response.data);
                 setCompany(response.data);
-                localStorage.setItem('name',response.data.Name);
-                localStorage.setItem('type',response.data.BussinessType);
-                localStorage.setItem('number',response.data.ContactNumber);
-                localStorage.setItem('email',response.data.email);
-                localStorage.setItem('address',response.data.PhysicalAddress.street);
-                localStorage.setItem('city',response.data.PhysicalAddress.city);
-                localStorage.setItem('started',response.data.Started);
-                localStorage.setItem('Services',response.data.Services);
                 setCompanyName(response.data.Name);
                 setCompanyNumber(response.data.ContactNumber);
                 setCompanyEmail(response.data.email);
@@ -46,6 +39,10 @@ export default function Nav() {
             }
             );
     }
+    const logout = () => {
+        navigate('/')
+
+    }
   return (
     <nav class="flex flex-col bg-gray-200 dark:bg-gray-900 w-64 px-12 pt-4 pb-6">
                 
@@ -53,7 +50,7 @@ export default function Nav() {
                 <div class="flex flex-row border-b items-center justify-between pb-2">
                    
                     <span class="text-lg font-semibold capitalize dark:text-gray-300">
-                        {fullnames}
+                        
                     </span>
         
                     <span class="relative ">
@@ -87,11 +84,11 @@ export default function Nav() {
                     
                     <h2
                         class="mt-4 text-xl dark:text-gray-300 font-extrabold capitalize">
-                        {CompanyName}
+                        
                     </h2>
                     <span class="text-sm dark:text-gray-300">
                         <span class="font-semibold text-green-600 dark:text-green-300">
-                            {CompanyNumber}
+                           
                         </span>
                         
                     </span>
@@ -191,7 +188,7 @@ export default function Nav() {
         
                 <div class="mt-auto flex items-center text-red-700 dark:text-red-400">
                     
-                    <Link to={'/'} class="flex items-center">
+                    <a onClick={logout} class="flex items-center">
                         <svg class="fill-current h-5 w-5" viewBox="0 0 24 24">
                             <path
                                 d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012
@@ -199,7 +196,7 @@ export default function Nav() {
                                 0 012-2h9z"></path>
                         </svg>
                         <span class="ml-2 capitalize font-medium">log out</span>
-                    </Link>
+                    </a>
         
                 </div>
             </nav>

@@ -13,10 +13,15 @@ const Login = () => {
 		alert('enter username and password')
 		   return
 	   }
+	   // check if token is set 
+	   if(localStorage.getItem('token')){
+		   navigate('/home')
+		   
+	   }
 	   try {
 		axios({
 			method: 'post',
-			url: 'https://maneoapuso.herokuapp.com/api/v1/auth/login',
+			url: 'http://localhost:3010/api/v1/auth/login',
 			data: {
 				email: username,
 				password: password
@@ -24,20 +29,11 @@ const Login = () => {
 			config: {headers: {'Content-Type': 'multipart/form-data'}}
 		})
 			.then(function (response) {
-			// if (response.data.ShouldResetPassword === true){
-			// 	navigate('/change-password')
-			// }
-			// else{
 				localStorage.setItem('token',response.data.accessToken)
-				localStorage.setItem('userId',response.data._id)
-				localStorage.setItem('email',response.data.email)
-				localStorage.setItem('fullNames',response.data.fullNames)
-				console.table('user information====',response.data)
 				navigate('/home')
 			// }
 			})
 			.catch(function (response) {
-				//handle error
 				alert(response)
 				console.log(response);
 			});

@@ -19,7 +19,7 @@ export default function SideBar() {
                                 Info
                             </Link>
         
-                            <Link to={'/home'}
+                            <Link to={'/CompanAdd'}
                                 
                                 class="ml-6 py-2 block border-b-2 border-transparent
                                 focus:outline-none font-medium capitalize text-center
