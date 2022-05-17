@@ -26,7 +26,11 @@ const DefaultZoom = 10;
     const[latitude,setLatitude] = useState('');
     const[longitude,setLongitude] = useState('');
     const[operationHours,setOperationHours] = useState('');
-
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const[LunchStartTime,setLunchStartTime] = useState('');
+    const[LunchEndTime,setLunchEndTime] = useState('');
+    const[Logo,setLogo] = useState('');
 
     // MAP
 
@@ -53,24 +57,11 @@ const DefaultZoom = 10;
     
    
     useEffect(() => {
-        getAllCategories();
-        console.log(userid);
+       // getAllCategories();
+        console.log(token);
     }, []);
 
-    const getAllCategories = () => {
-        axios.get('http://localhost:3010/api/v1/company/get/all/categories',{
-            headers: {
-                token: "Bearer " + token,
-            }
-        })
-            .then(function (response) {
-                
-                setCategories(response.data);
-            })
-            .catch(function (error) {
-                alert(error);
-            });
-    }
+   
 
    
 
@@ -81,8 +72,12 @@ const DefaultZoom = 10;
             ContactNumber:CompanyPhone,
             BussinessType:companyCatergry,
             Started:startDate,
-            UserId:userid,
-            operationHours:operationHours,
+            operationHours:{
+                startTime:startTime,
+                CloseTime:endTime,
+                LunchTimeStart:LunchStartTime,
+                LunchTimeEnd:LunchEndTime
+            },
             CompanyLocation:{
                 latitude:latitude,
                 longitude:longitude
@@ -103,53 +98,53 @@ const DefaultZoom = 10;
 
         console.log(data)
 
-        axios({
-			method: 'post',
-			url: 'http://localhost:3010/api/v1/company/add',
-            headers: {
-                token: "Bearer " + token,
-            },
-			data: {
-                Name:CompanyName,
-                email:CompanyEmail,
-                ContactNumber:CompanyPhone,
-                BussinessType:companyCatergry,
-                Started:startDate,
-                UserId:userid,
-                PhysicalAddress:{
-                    street:street,
-                    city:city,
-                    District:District,
-                },
-                PostalAddress:{
-                    postalCode:postalCode,
-                    street:street,
-                    city_town:city
+        // axios({
+		// 	method: 'post',
+		// 	url: 'http://localhost:3010/api/v1/company/add',
+        //     headers: {
+        //         token: "Bearer " + token,
+        //     },
+		// 	data: {
+        //         Name:CompanyName,
+        //         email:CompanyEmail,
+        //         ContactNumber:CompanyPhone,
+        //         BussinessType:companyCatergry,
+        //         Started:startDate,
+        //         UserId:userid,
+        //         PhysicalAddress:{
+        //             street:street,
+        //             city:city,
+        //             District:District,
+        //         },
+        //         PostalAddress:{
+        //             postalCode:postalCode,
+        //             street:street,
+        //             city_town:city
     
-                }
-			},
-			config: {headers: {'Content-Type': 'multipart/form-data'}}
-		})
-			.then(function (response) {
-                console.log(response.data);
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Company Added Successfully',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
+        //         }
+		// 	},
+		// 	config: {headers: {'Content-Type': 'multipart/form-data'}}
+		// })
+		// 	.then(function (response) {
+        //         console.log(response.data);
+        //         Swal.fire({
+        //             title: 'Success',
+        //             text: 'Company Added Successfully',
+        //             icon: 'success',
+        //             confirmButtonText: 'OK'
 
-                });
-			})
-			.catch(function (response) {
-				//handle error
-                Swal.fire({
-                    title: 'Error',
-                    text: `${response}`,
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                    })
-				console.log(response);
-			});
+        //         });
+		// 	})
+		// 	.catch(function (response) {
+		// 		//handle error
+        //         Swal.fire({
+        //             title: 'Error',
+        //             text: `${response}`,
+        //             icon: 'error',
+        //             confirmButtonText: 'Ok'
+        //             })
+		// 		console.log(response);
+		// 	});
 
 
 
@@ -237,7 +232,9 @@ const DefaultZoom = 10;
 
                                                             <div className="md:col-span-3">
                                                                 <label htmlFor="address">Company Name</label>
-                                                                <input type="text" name="address" id="address"
+                                                                <input 
+                                                                onChange={event => setCompanyName(event.target.value)}
+                                                                type="text" name="address" id="address"
                                                                        
                                                                        
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
@@ -247,22 +244,47 @@ const DefaultZoom = 10;
                                                             <div className="md:col-span-2">
                                                                 <label htmlFor="city">Company Email</label>
                                                                 <input type="text" name="city" id="city"
-                                                                       
+                                                                       onChange={event => setCompanyEmail(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                         placeholder=""/>
                                                             </div>
 
                                                             <div className="md:col-span-3">
-                                                                <label htmlFor="address">operation Hours</label>
-                                                                <input type="text" name="city" id="city"
+                                                                <label htmlFor="address">Start Time</label>
+                                                                <input type="time" name="address" id="address"
+                                                                       onChange={event => setStartTime(event.target.value)}
                                                                        
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        />
+                                                            </div>
+
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="city">Lunch Time Start</label>
+                                                                <input type="time" name="city" id="city"
+                                                                       onChange={event => setLunchStartTime(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="city">Lunch Time End</label>
+                                                                <input type="time" name="city" id="city"
+                                                                       onChange={event => setLunchEndTime(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                         placeholder=""/>
                                                             </div>
                                                             <div className="md:col-span-2">
+                                                                <label htmlFor="city">Close Time</label>
+                                                                <input type="time" name="city" id="city"
+                                                                       onChange={event => setEndTime(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+
+                                                          
+                                                            <div className="md:col-span-2">
                                                                 <label htmlFor="city">Phone Number</label>
                                                                 <input type="text" name="city" id="city"
-                                                                       
+                                                                       onChange={event => setCompanyPhone(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                        placeholder=""/>
                                                             </div>
@@ -270,24 +292,16 @@ const DefaultZoom = 10;
                                                             <div className="md:col-span-3">
                                                                 <label htmlFor="address">Toll Free</label>
                                                                 <input type="text" name="city" id="city"
-                                                                       
+                                                                       onChange={event => setCompanyLandline(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                        placeholder=""/>
 
                                                             </div>
                                                            
-
-                                                            <div className="md:col-span-2">
-                                                                <label htmlFor="city">phone Number</label>
-                                                                <input type="text" name="city" id="city"
-                                                                       
-                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                                                       placeholder=""/>
-                                                            </div>
-                                                            <div className="md:col-span-5">
+                                                            <div className="md:col-span-3">
                                                                 <label htmlFor="address">Category</label>
                                                                 <select
-                                                                    
+                                                                    onChange={event => setCategories(event.target.value)}
                                                                     className="border-0 px-3 py-3 placeholder-blueGray-300  bg-gray-50 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
                                                                     <option>General</option>
                                                                     <option>Cardiologists</option>
@@ -301,10 +315,18 @@ const DefaultZoom = 10;
 
                                                             </div>
 
+                                                              <div className="md:col-span-2">
+                                                                <label htmlFor="address">STARTED</label>
+                                                                <input type="date" 
+                                                                       onChange={event => setStartDate(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+
                                                             <div className="md:col-span-5">
                                                                 <label htmlFor="city">Physical Address</label>
                                                                 <input
-                                                                    
+                                                                    onChange={event => setStreet(event.target.value)}
                                                                     name="city" id="city"
                                                                     className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                 />
@@ -313,7 +335,7 @@ const DefaultZoom = 10;
                                                             <div className="md:col-span-2">
                                                                 <label htmlFor="address">City</label>
                                                                 <select
-                                                                    
+                                                                    onChange={event => setCity(event.target.value)}
                                                                     className="border-0 px-3 py-3 placeholder-blueGray-300  bg-gray-50 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
                                                                     <option>....</option>
                                                                     <option>Gaborone</option>
@@ -329,7 +351,7 @@ const DefaultZoom = 10;
                                                                 <label htmlFor="address">District</label>
 
                                                                 <select
-                                                                    
+                                                                    onChange={event => setDistrict(event.target.value)}
                                                                     className="border-0 px-3 py-3 placeholder-blueGray-300  bg-gray-50 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
                                                                     <option>....</option>
                                                                     <option>Gaborone</option>
@@ -340,8 +362,8 @@ const DefaultZoom = 10;
                                                             </div>
                                                             <div className="md:col-span-1">
                                                                 <label htmlFor="address">Postal Address</label>
-                                                                <input type="text" name="address" id="address"
-                                                                       
+                                                                <input type="text" 
+                                                                       onChange={event => setPostalCode(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                        placeholder=""/>
                                                             </div>
@@ -351,7 +373,7 @@ const DefaultZoom = 10;
                                                                 <label htmlFor="address">Latitute:</label>
                                                                 <input type="text" name="address" id="address"
                                                                        value={location.lat} disabled
-
+                                                                       onChange={event => setLatitude(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                        placeholder=""/>
                                                             </div>
@@ -359,7 +381,7 @@ const DefaultZoom = 10;
                                                                 <label htmlFor="address">Longitute:</label>
                                                                 <input type="text" name="address" id="address"
                                                                        value={location.lng} disabled
-
+                                                                       onChange={event => setLongitude(event.target.value)}
                                                                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                                        placeholder=""/>
                                                             </div>
@@ -367,7 +389,7 @@ const DefaultZoom = 10;
                                                             <div className="md:col-span-5">
                                                                 <label htmlFor="email">Logo</label>
                                                                 <input  type="file"  rows="8" name="email" id="email"
-                                                                           
+                                                                        onChange={event => setLogo(event.target.files[0])}
                                                                        className="border-0 px-3 py-3  bg-gray-50 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                                            />
 
@@ -404,7 +426,7 @@ const DefaultZoom = 10;
                                                             <div className="md:col-span-5 text-right">
                                                                 <div className="inline-flex items-end">
                                                                     <button
-                                                                        
+                                                                        onClick={handlSubmit}
                                                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit
                                                                     </button>
                                                                 </div>
