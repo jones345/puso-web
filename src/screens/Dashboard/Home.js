@@ -1,287 +1,458 @@
-import React from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Link,
-    Switch,
-    Redirect,
-    useLocation
-  } from "react-router-dom";
-
+import React, { useState,useEffect } from "react";
+import Swal from 'sweetalert2'
+import Nav from "./Nav"
+import SideBar from "./SideBar"
+import CompanySidbar from "./CompanySidbar"
+import axios from 'axios';
+import Select from 'react-select'
+import MapPicker from 'react-google-map-picker'
+const DefaultLocation = { lat: -24.370998889292274, lng: 25.776640255238224};
+const DefaultZoom = 10;
 
   const Home = () => {
+
+    const [startDate, setStartDate] = useState(new Date());
+    const[Categories,setCategories] = useState([]);
+    const[CompanyName ,setCompanyName] = useState('');
+    const[CompanyEmail ,setCompanyEmail] = useState('');
+    const[CompanyPhone ,setCompanyPhone] = useState('');
+    const[CompanyLandline ,setCompanyLandline] = useState('');
+    const[companyCatergry ,setCompanyCatergry] = useState('');
+    const [postalCode, setPostalCode] = useState('');
+    const [street, setStreet] = useState('');
+    const[city,setCity] = useState('');
+    const[District,setDistrict] = useState('');
+    const[country,setCountry] = useState('');
+    const[latitude,setLatitude] = useState('');
+    const[longitude,setLongitude] = useState('');
+    const[operationHours,setOperationHours] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const[LunchStartTime,setLunchStartTime] = useState('');
+    const[LunchEndTime,setLunchEndTime] = useState('');
+    const[Logo,setLogo] = useState('');
+
+    // MAP
+
+    const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+    const [location, setLocation] = useState(defaultLocation);
+    const [zoom, setZoom] = useState(DefaultZoom);
+    
+    function handleChangeLocation (lat, lng){
+        setLocation({lat:lat, lng:lng});
+    }
+
+    function handleChangeZoom (newZoom){
+        setZoom(newZoom);
+    }
+
+    function handleResetLocation(){
+        setDefaultLocation({ ... DefaultLocation});
+        setZoom(DefaultZoom);
+    }
+  
+
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('userId');
+    
+   
+    useEffect(() => {
+       // getAllCategories();
+        console.log(token);
+    }, []);
+
+   
+
+   
+
+    const handlSubmit = (e) => {
+        const data ={
+            Name:CompanyName,
+            email:CompanyEmail,
+            ContactNumber:CompanyPhone,
+            BussinessType:companyCatergry,
+            Started:startDate,
+            operationHours:{
+                startTime:startTime,
+                CloseTime:endTime,
+                LunchTimeStart:LunchStartTime,
+                LunchTimeEnd:LunchEndTime
+            },
+            CompanyLocation:{
+                latitude:latitude,
+                longitude:longitude
+            },
+            PhysicalAddress:{
+                street:street,
+                city:city,
+                District:District,
+            },
+            PostalAddress:{
+                postalCode:postalCode,
+                street:street,
+                city_town:city
+
+            }
+
+        }
+
+        console.log(data)
+
+        // axios({
+		// 	method: 'post',
+		// 	url: 'http://localhost:3010/api/v1/company/add',
+        //     headers: {
+        //         token: "Bearer " + token,
+        //     },
+		// 	data: {
+        //         Name:CompanyName,
+        //         email:CompanyEmail,
+        //         ContactNumber:CompanyPhone,
+        //         BussinessType:companyCatergry,
+        //         Started:startDate,
+        //         UserId:userid,
+        //         PhysicalAddress:{
+        //             street:street,
+        //             city:city,
+        //             District:District,
+        //         },
+        //         PostalAddress:{
+        //             postalCode:postalCode,
+        //             street:street,
+        //             city_town:city
+    
+        //         }
+		// 	},
+		// 	config: {headers: {'Content-Type': 'multipart/form-data'}}
+		// })
+		// 	.then(function (response) {
+        //         console.log(response.data);
+        //         Swal.fire({
+        //             title: 'Success',
+        //             text: 'Company Added Successfully',
+        //             icon: 'success',
+        //             confirmButtonText: 'OK'
+
+        //         });
+		// 	})
+		// 	.catch(function (response) {
+		// 		//handle error
+        //         Swal.fire({
+        //             title: 'Error',
+        //             text: `${response}`,
+        //             icon: 'error',
+        //             confirmButtonText: 'Ok'
+        //             })
+		// 		console.log(response);
+		// 	});
+
+
+
+
+    }
+
+    const options = Categories.map((category) => {
+        return {
+            value: category.name,
+            label: category.name
+
+        }
+    })
+    
+  
+    const address = [
+        {
+            value: 'Cental',
+            label: 'Cental'
+        },
+        {
+            value: 'North East',
+            label: 'North East'
+        },
+        {
+            value: 'North West',
+            label: 'North West'
+        },
+        {
+            value: 'South East',
+            label: 'South East'
+        },
+        {
+            value: 'South West',
+            label: 'South West'
+        },
+        {
+            value: 'East',
+            label: 'East'
+        },
+        {
+            value: 'West',
+            label: 'West'
+        },
+        {
+            value: 'North',
+            label: 'North'
+        },
+        {
+            value: 'South',
+            label: 'South'
+        },
+
+    ]
     return (
         
+        
         <div class="h-screen w-full flex overflow-hidden">
-            <nav class="flex flex-col bg-gray-200 dark:bg-gray-900 w-64 px-12 pt-4 pb-6">
-               
-        
-                <div class="flex flex-row border-b items-center justify-between pb-2">
-                   
-                    <span class="text-lg font-semibold capitalize dark:text-gray-300">
-                        Current User Names
-                    </span>
-        
-                    <span class="relative ">
-                        <a
-                            class="hover:text-green-500 dark-hover:text-green-300
-                            text-gray-600 dark:text-gray-300"
-                            >
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path
-                                    d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
-                        </a>
-                        <div
-                            class="absolute w-2 h-2 rounded-full bg-green-500
-                            dark-hover:bg-green-300 right-0 mb-5 bottom-0"></div>
-                    </span>
-        
-                </div>
-        
-                <div class="mt-8">
-                   
-                    <img
-                        class="h-12 w-12 rounded-full object-cover"
-                        src="https://www.nicepng.com/png/detail/248-2489738_business-company-logo-template-your-company-logo-png.png"
-                        alt="Company Logo" />
-                    <h2
-                        class="mt-4 text-xl dark:text-gray-300 font-extrabold capitalize">
-                        Company Name
-                    </h2>
-                    
-                </div>
-        
-             
-        
-                <ul class="mt-2 text-gray-600">
-                   
-                    <li class="mt-8">
-                        <a  class="flex ">
-                            <svg
-                                class="fill-current h-5 w-5 dark:text-gray-300"
-                                viewBox="0 0 24 24">
-                                <path
-                                    d="M16 20h4v-4h-4m0-2h4v-4h-4m-6-2h4V4h-4m6
-                                    4h4V4h-4m-6 10h4v-4h-4m-6 4h4v-4H4m0 10h4v-4H4m6
-                                    4h4v-4h-4M4 8h4V4H4v4z"></path>
-                            </svg>
-                            <span
-                                class="ml-2 capitalize font-medium text-black
-                                dark:text-gray-300">
-                                dashboard
-                            </span>
-                        </a>
-                    </li>
+            <Nav/>
 
-                    <li
-                        // class="mt-8 shadow py-2 bg-white dark:bg-gray-200 rounded-lg -ml-4"
-                        class="mt-8"
-                        >
-                        <a  class="flex ">
-                            <svg class="fill-current h-5 w-5" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 4a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0
-                                    014-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4
-                                    8-4z"></path>
-                            </svg>
-                            <span class="ml-2 capitalize font-medium">General</span>
-                        </a>
-                    </li>
-        
-                    <li class="mt-8">
-                        <a  class="flex">
-                            <svg
-                                class="fill-current h-5 w-5 dark:text-gray-300"
-                                viewBox="0 0 24 24">
-                                <path
-                                    d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2
-                                    2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0
-                                    00-2-2h-1V1m-1 11h-5v5h5v-5z"></path>
-                            </svg>
-                            <span
-                                class="ml-2 capitalize font-medium text-black
-                                dark:text-gray-300">
-                                calendar
-                            </span>
-                        </a>
-                    </li>
-                    <li class="mt-8">
-                        <a  class="flex">
-                            <svg
-                                class="fill-current h-5 w-5 dark:text-gray-300"
-                                viewBox="0 0 24 24">
-                                <path
-                                    d="M12 13H7v5h5v2H5V10h2v1h5v2M8
-                                    4v2H4V4h4m2-2H2v6h8V2m10 9v2h-4v-2h4m2-2h-8v6h8V9m-2
-                                    9v2h-4v-2h4m2-2h-8v6h8v-6z"></path>
-                            </svg>
-                            <span
-                                class="ml-2 capitalize font-medium text-black
-                                dark:text-gray-300">
-                                Settings
-                            </span>
-                        </a>
-                    </li>
-        
-                </ul>
-        
-                <div class="mt-auto flex items-center text-red-700 dark:text-red-400">
-                   
-                    <a href="#home" class="flex items-center">
-                        <svg class="fill-current h-5 w-5" viewBox="0 0 24 24">
-                            <path
-                                d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012
-                                2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2
-                                0 012-2h9z"></path>
-                        </svg>
-                        <span class="ml-2 capitalize font-medium">log out</span>
-                    </a>
-        
-                </div>
-            </nav>
             <main
                 class="flex-1 flex flex-col bg-gray-100 dark:bg-gray-700 transition
                 duration-500 ease-in-out overflow-y-auto">
                 <div class="mx-10 my-2">
-                    <nav
-                        class="flex flex-row justify-between border-b
-                        dark:border-gray-600 dark:text-gray-400 transition duration-500
-                        ease-in-out">
-                        <div class="flex">
-                           
+                    {/* nav here  */}
+                    <SideBar/>
+                
+                    <div className="min-h-screen p-6 bg-gray-100 flex  ">
+                                    <div className="container max-w-screen-lg mx-auto">
+                                        <div>
+
+
+                                            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                                                <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                                                    <div className="text-gray-600">
+                                                        <p className="font-medium text-lg">Company Details</p>
+                                                        <p>Please fill out all the fields.</p>
+
+                                                    </div>
+
+
+                                                    <div className="lg:col-span-2">
+                                                        <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+
+
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="address">Company Name</label>
+                                                                <input 
+                                                                onChange={event => setCompanyName(event.target.value)}
+                                                                type="text" name="address" id="address"
+                                                                       
+                                                                       
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        />
+                                                            </div>
+
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="city">Company Email</label>
+                                                                <input type="text" name="city" id="city"
+                                                                       onChange={event => setCompanyEmail(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="address">Start Time</label>
+                                                                <input type="time" name="address" id="address"
+                                                                       onChange={event => setStartTime(event.target.value)}
+                                                                       
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        />
+                                                            </div>
+
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="city">Lunch Time Start</label>
+                                                                <input type="time" name="city" id="city"
+                                                                       onChange={event => setLunchStartTime(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="city">Lunch Time End</label>
+                                                                <input type="time" name="city" id="city"
+                                                                       onChange={event => setLunchEndTime(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="city">Close Time</label>
+                                                                <input type="time" name="city" id="city"
+                                                                       onChange={event => setEndTime(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+
+                                                          
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="city">Phone Number</label>
+                                                                <input type="text" name="city" id="city"
+                                                                       onChange={event => setCompanyPhone(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                       placeholder=""/>
+                                                            </div>
+
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="address">Toll Free</label>
+                                                                <input type="text" name="city" id="city"
+                                                                       onChange={event => setCompanyLandline(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                       placeholder=""/>
+
+                                                            </div>
+                                                           
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="address">Category</label>
+                                                                <select
+                                                                    onChange={event => setCategories(event.target.value)}
+                                                                    className="border-0 px-3 py-3 placeholder-blueGray-300  bg-gray-50 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
+                                                                    <option>General</option>
+                                                                    <option>Cardiologists</option>
+                                                                    <option>Dermatologists</option>
+                                                                    <option>Neurologists</option>
+                                                                    <option>Radiologists</option>
+                                                                    <option>Pediatricians</option>
+                                                                    <option>Cardiologists</option>
+                                                                    <option>gynecologists</option>
+                                                                </select>
+
+                                                            </div>
+
+                                                              <div className="md:col-span-2">
+                                                                <label htmlFor="address">STARTED</label>
+                                                                <input type="date" 
+                                                                       onChange={event => setStartDate(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                        placeholder=""/>
+                                                            </div>
+
+                                                            <div className="md:col-span-5">
+                                                                <label htmlFor="city">Physical Address</label>
+                                                                <input
+                                                                    onChange={event => setStreet(event.target.value)}
+                                                                    name="city" id="city"
+                                                                    className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                />
+                                                            </div>
+
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="address">City</label>
+                                                                <select
+                                                                    onChange={event => setCity(event.target.value)}
+                                                                    className="border-0 px-3 py-3 placeholder-blueGray-300  bg-gray-50 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
+                                                                    <option>....</option>
+                                                                    <option>Gaborone</option>
+                                                                    <option>Kanye</option>
+                                                                    <option>Tonota</option>
+                                                                    <option>Francistown</option>
+                                                                    <option>Maun</option>
+                                                                    <option>Ghanzi</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="address">District</label>
+
+                                                                <select
+                                                                    onChange={event => setDistrict(event.target.value)}
+                                                                    className="border-0 px-3 py-3 placeholder-blueGray-300  bg-gray-50 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
+                                                                    <option>....</option>
+                                                                    <option>Gaborone</option>
+                                                                    <option>Palapye</option>
+                                                                    <option>Tonota</option>
+                                                                    <option>Francistown</option>
+                                                                </select>
+                                                            </div>
+                                                            <div className="md:col-span-1">
+                                                                <label htmlFor="address">Postal Address</label>
+                                                                <input type="text" 
+                                                                       onChange={event => setPostalCode(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                       placeholder=""/>
+                                                            </div>
+
+
+                                                            <div className="md:col-span-3">
+                                                                <label htmlFor="address">Latitute:</label>
+                                                                <input type="text" name="address" id="address"
+                                                                       value={location.lat} disabled
+                                                                       onChange={event => setLatitude(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                       placeholder=""/>
+                                                            </div>
+                                                            <div className="md:col-span-2">
+                                                                <label htmlFor="address">Longitute:</label>
+                                                                <input type="text" name="address" id="address"
+                                                                       value={location.lng} disabled
+                                                                       onChange={event => setLongitude(event.target.value)}
+                                                                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                                       placeholder=""/>
+                                                            </div>
+
+                                                            <div className="md:col-span-5">
+                                                                <label htmlFor="email">Logo</label>
+                                                                <input  type="file"  rows="8" name="email" id="email"
+                                                                        onChange={event => setLogo(event.target.files[0])}
+                                                                       className="border-0 px-3 py-3  bg-gray-50 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                                                           />
+
+
+                                                            </div>
+
+                                                            <div className="md:col-span-5">
+                                                                
+                                                            <MapPicker defaultLocation={defaultLocation}
+                                                            zoom={zoom}
+                                                            mapTypeId="roadmap"
+                                                            style={{height:'700px'}}
+                                                            onChangeLocation={handleChangeLocation} 
+                                                            onChangeZoom={handleChangeZoom}
+                                                            apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8'/>
+                                                                {/* <
+                                                                    MapPicker defaultLocation={defaultLocation}
+                                                                              zoom={zoom}
+                                                                              mapTypeId="roadmap"
+                                                                              style={{height:'700px'}}
+                                                                              onChangeLocation={handleChangeLocation}
+                                                                              onChangeZoom={handleChangeZoom}
+                                                                              apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8'
+                                                                /> */}
+                                                            </div>
+
+
+
+
+
+                                                           
+
+
+                                                            <div className="md:col-span-5 text-right">
+                                                                <div className="inline-flex items-end">
+                                                                    <button
+                                                                        onClick={handlSubmit}
+                                                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+
+
+
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
         
-                            <a
-                                href="users-dashboard/"
-                                class="py-2 block text-green-500 border-green-500
-                                dark:text-green-200 dark:border-green-200
-                                focus:outline-none border-b-2 font-medium capitalize
-                                transition duration-500 ease-in-out">
-                                users
-                            </a>
-                            <button
-                                class="ml-6 py-2 block border-b-2 border-transparent
-                                focus:outline-none font-medium capitalize text-center
-                                focus:text-green-500 focus:border-green-500
-                                dark-focus:text-green-200 dark-focus:border-green-200
-                                transition duration-500 ease-in-out">
-                                Services
-                            </button>
-                            <button
-                                class="ml-6 py-2 block border-b-2 border-transparent
-                                focus:outline-none font-medium capitalize text-center
-                                focus:text-green-500 focus:border-green-500
-                                dark-focus:text-green-200 dark-focus:border-green-200
-                                transition duration-500 ease-in-out">
-                                Events
-                            </button>
-                        </div>
+                   
         
-                        <div class="flex items-center select-none">
-                            <span
-                                class="hover:text-green-500 dark-hover:text-green-300
-                                cursor-pointer mr-3 transition duration-500 ease-in-out">
+                    
+                   
         
-                                <svg viewBox="0 0 512 512" class="h-5 w-5 fill-current">
-                                    <path
-                                        d="M505 442.7L405.3
-                                        343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7
-                                        44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1
-                                        208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4
-                                        2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9
-                                        0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7
-                                        0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0
-                                        128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
-                                </svg>
-                            </span>
-        
-                            <input
-                                class="w-12 bg-transparent focus:outline-none"
-                                placeholder="Search" />
-        
-                        </div>
-        
-                    </nav>
-                    {/* <h2 class="my-4 text-4xl font-semibold dark:text-gray-400">
-                        User list
-                    </h2> */}
-                        <button
-                           
-                            onClick={() => {
-                                console.log('clicked');
-                            }}
-                            
-                            className="mt-8 flex items-center justify-between py-3 px-2 text-white rounded-lg bg-green-400 shadow-lg block md:inline-block"
-                            >
-                        button
-                            
-                        </button>
-                    <div
-                        class="pb-2 flex items-center justify-between text-gray-600
-                        dark:text-gray-400 border-b dark:border-gray-600">
-                        
-        
-                        {/* <div>
-                            <span>
-                                <span class="text-green-500 dark:text-green-200">
-                                    431
-                                </span>
-                                users;
-                            </span>
-                            <span>
-                                <span class="text-green-500 dark:text-green-200">
-                                    22
-                                </span>
-                                projects;
-                            </span>
-                            <span>
-                                <span class="text-green-500 dark:text-green-200">
-                                    33
-                                </span>
-                                roles
-                            </span>
-                        </div> */}
-                        {/* <div>
-                            <span class="capitalize">
-                                project
-                                <span
-                                    class="text-green-500 dark:text-green-200
-                                    cursor-pointer">
-                                    all
-                                </span>
-                            </span>
-                            <span class="capitalize ml-12">
-                                date added
-                                <span
-                                    class="text-green-500 dark:text-green-200
-                                    cursor-pointer">
-                                    all time
-                                </span>
-                            </span>
-                            <span class="capitalize ml-12">
-                                role
-                                <span
-                                    class="text-green-500 dark:text-green-200
-                                    cursor-pointer">
-                                    all
-                                </span>
-                            </span>
-        
-                        </div> */}
-        
-                    </div>
-                 
-        
-                </div> 
+                </div>
         
             </main>
         

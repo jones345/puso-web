@@ -1,12 +1,62 @@
-import React from "react";
-import { Link,useNavigate } from "react-router-dom";
+import React, {useState,useEffect} from 'react'
+import {useNavigate } from "react-router-dom";
 import OtpInput from 'react-otp-input';
+import axios from 'axios';
 const Otp = () => {
 
   const navigate = useNavigate();
+  const [otp,setOtp] = useState(null)
+
+
+  useEffect(() => {
+    try{
+       axios({
+           method: 'post',
+           url: 'http://localhost:3010/api/v1/auth/send/otp',
+           data: {
+               email: localStorage.getItem('email'),
+           },
+           config: {headers: {'Content-Type': 'multipart/form-data'}}
+           
+       })
+       .then(function (response) {
+           alert('otp sent')
+       })
+
+   }
+   catch(e){
+       console.log(e)
+   }
+  }, [])
 
   const submit = () => {
-      navigate("/home");
+      //navigate("/home");
+      if(otp === null){
+        alert('enter otp')
+        return
+      }
+
+      try {
+        axios({
+          method: 'post',
+          url: 'http://localhost:3010/api/v1/auth/verify/otp',
+          data: {
+            otp: otp
+          },
+          config: {headers: {'Content-Type': 'multipart/form-data'}}
+        })
+          .then(function (response) {
+            navigate('/home')
+          })
+          .catch(function (response) {
+            //handle error
+            alert(response.data.message)
+            console.log(response);
+          });
+      }
+      catch (e) {
+        console.log(e.message);
+      }
       
   }
   return (
@@ -34,21 +84,16 @@ const Otp = () => {
 				<label className="text-sm font-bold text-gray-700 tracking-wide">
 					OTP
 				</label>
-                {/* <OtpInput
-               
-                    
-                    
-                    numInputs={6}
-                    separator={<span>-</span>}
-                /> */}
-				<input className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" placeholder="OTP" />
+				<input 
+         onChange={event => setOtp(event.target.value)}
+        className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" placeholder="OTP" />
             </div>
 			<div>
 				<button
         onClick={submit}
                  className="w-full flex justify-center bg-indigo-500 text-gray-100 p-4  rounded-full tracking-wide
                                 font-semibold  focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg cursor-pointer transition ease-in duration-300">
-                    Comfirm OTP
+                    Confirm OTP
                 </button>
 			</div>
 			
